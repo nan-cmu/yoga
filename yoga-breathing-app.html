@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>瑜伽呼吸练习</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #f5f7fa, #e4e8f0);
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .app-title {
+            font-size: 24px;
+            color: #5a5e9a;
+            margin-bottom: 20px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+        
+        .settings {
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .settings-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        label {
+            color: #5a5e9a;
+            font-size: 16px;
+            flex: 1;
+            text-align: left;
+            padding-right: 20px;
+        }
+        
+        input[type="number"] {
+            width: 100px;
+            padding: 10px 15px;
+            border: 1px solid #e1e4ea;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #5a5e9a;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        input[type="number"]:focus {
+            border-color: #b8c6db;
+            box-shadow: 0 0 0 2px rgba(184, 198, 219, 0.3);
+        }
+        
+        .button {
+            background-color: #a1b3d8;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+            margin-top: 10px;
+        }
+        
+        .button:hover {
+            background-color: #8aa0c9;
+        }
+        
+        .button:active {
+            transform: scale(0.98);
+        }
+        
+        .timer-display {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .breathing-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background-color: rgba(161, 179, 216, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 25px;
+            position: relative;
+            transform-origin: center;
+        }
+        
+        .circle-inner {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background-color: rgba(161, 179, 216, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .circle-pulse {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: rgba(161, 179, 216, 0.2);
+            transform-origin: center;
+        }
+        
+        .timer-text {
+            font-size: 36px;
+            color: #5a5e9a;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+        
+        .status-text {
+            font-size: 20px;
+            color: #8aa0c9;
+            font-weight: 300;
+            margin-bottom: 5px;
+        }
+        
+        .total-timer {
+            font-size: 16px;
+            color: #a1b3d8;
+            margin-top: 15px;
+        }
+        
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .pulse-inhale {
+            animation: pulse-in 1s ease-in-out infinite alternate;
+        }
+        
+        .pulse-exhale {
+            animation: pulse-out 1s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulse-in {
+            from {
+                transform: scale(0.9);
+                background-color: rgba(161, 179, 216, 0.2);
+            }
+            to {
+                transform: scale(1.1);
+                background-color: rgba(161, 179, 216, 0.4);
+            }
+        }
+        
+        @keyframes pulse-out {
+            from {
+                transform: scale(1.1);
+                background-color: rgba(161, 179, 216, 0.4);
+            }
+            to {
+                transform: scale(0.9);
+                background-color: rgba(161, 179, 216, 0.2);
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 1s;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .background-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        
+        .lotus {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            bottom: 20px;
+            right: 20px;
+        }
+        
+        .pause-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .pause-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .pause-message {
+            font-size: 24px;
+            color: #5a5e9a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="app-title">瑜伽呼吸练习</h1>
+        
+        <div class="settings" id="settings-section">
+            <div class="settings-row">
+                <label for="inhale-time">吸气时间（秒）:</label>
+                <input type="number" id="inhale-time" min="1" max="20" value="4">
+            </div>
+            
+            <div class="settings-row">
+                <label for="exhale-time">呼气时间（秒）:</label>
+                <input type="number" id="exhale-time" min="1" max="20" value="6">
+            </div>
+            
+            <div class="settings-row">
+                <label for="session-duration">练习总时长（分钟）:</label>
+                <input type="number" id="session-duration" min="1" max="60" value="5">
+            </div>
+            
+            <button class="button" id="start-button">开始练习</button>
+        </div>
+        
+        <div class="timer-display" id="timer-section">
+            <div class="breathing-circle">
+                <div class="circle-pulse" id="pulse-animation"></div>
+                <div class="circle-inner">
+                    <div class="status-text" id="breath-status">准备</div>
+                    <div class="timer-text" id="breath-timer">0</div>
+                </div>
+            </div>
+            
+            <div class="total-timer" id="session-timer">总时间: 00:00 / 00:00</div>
+            
+            <div class="controls">
+                <button class="button" id="pause-button">暂停</button>
+                <button class="button" id="stop-button">结束</button>
+            </div>
+        </div>
+        
+        <div class="pause-overlay" id="pause-overlay">
+            <div class="pause-message">已暂停</div>
+        </div>
+        
+        <div class="background-elements">
+            <!-- Simple Lotus Flower SVG -->
+            <svg class="lotus" viewBox="0 0 100 100">
+                <path d="M50,30 C60,10 80,20 50,50 C20,20 40,10 50,30" fill="#a1b3d8" />
+                <path d="M50,30 C70,20 70,40 50,50 C30,40 30,20 50,30" fill="#8aa0c9" />
+                <path d="M50,30 C40,10 20,20 50,50 C80,20 60,10 50,30" fill="#a1b3d8" />
+                <circle cx="50" cy="50" r="5" fill="#5a5e9a" />
+            </svg>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const startButton = document.getElementById('start-button');
+            const pauseButton = document.getElementById('pause-button');
+            const stopButton = document.getElementById('stop-button');
+            const settingsSection = document.getElementById('settings-section');
+            const timerSection = document.getElementById('timer-section');
+            const breathStatus = document.getElementById('breath-status');
+            const breathTimer = document.getElementById('breath-timer');
+            const sessionTimer = document.getElementById('session-timer');
+            const pulseAnimation = document.getElementById('pulse-animation');
+            const pauseOverlay = document.getElementById('pause-overlay');
+            
+            // Input fields
+            const inhaleTimeInput = document.getElementById('inhale-time');
+            const exhaleTimeInput = document.getElementById('exhale-time');
+            const sessionDurationInput = document.getElementById('session-duration');
+            
+            // Timer variables
+            let inhaleTime, exhaleTime, sessionDuration;
+            let isInhaling = true;
+            let currentBreathTime = 0;
+            let totalSessionTime = 0;
+            let sessionInterval;
+            let breathInterval;
+            let isPaused = false;
+            
+            // Format time as MM:SS
+            function formatTime(seconds) {
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+            
+            // Update the breath animation
+            function updateBreathAnimation() {
+                pulseAnimation.className = 'circle-pulse';
+                
+                if (isInhaling) {
+                    breathStatus.textContent = '吸气';
+                    pulseAnimation.classList.add('pulse-inhale');
+                } else {
+                    breathStatus.textContent = '呼气';
+                    pulseAnimation.classList.add('pulse-exhale');
+                }
+            }
+            
+            // Start the practice session
+            function startSession() {
+                // Get input values
+                inhaleTime = parseInt(inhaleTimeInput.value) || 4;
+                exhaleTime = parseInt(exhaleTimeInput.value) || 6;
+                sessionDuration = parseInt(sessionDurationInput.value) || 5;
+                
+                // Validate inputs
+                if (inhaleTime < 1) inhaleTime = 1;
+                if (exhaleTime < 1) exhaleTime = 1;
+                if (sessionDuration < 1) sessionDuration = 1;
+                
+                // Convert session duration to seconds
+                const totalSessionSeconds = sessionDuration * 60;
+                
+                // Hide settings, show timer
+                settingsSection.style.display = 'none';
+                timerSection.style.display = 'flex';
+                timerSection.classList.add('fade-in');
+                
+                // Initialize timers
+                isInhaling = true;
+                currentBreathTime = inhaleTime;
+                totalSessionTime = 0;
+                
+                // Update display
+                breathTimer.textContent = currentBreathTime;
+                sessionTimer.textContent = `总时间: 00:00 / ${formatTime(totalSessionSeconds)}`;
+                updateBreathAnimation();
+                
+                // Start session timer
+                sessionInterval = setInterval(function() {
+                    if (isPaused) return;
+                    
+                    totalSessionTime++;
+                    
+                    // Check if session is complete
+                    if (totalSessionTime >= totalSessionSeconds) {
+                        endSession();
+                        return;
+                    }
+                    
+                    // Update session timer display
+                    sessionTimer.textContent = `总时间: ${formatTime(totalSessionTime)} / ${formatTime(totalSessionSeconds)}`;
+                }, 1000);
+                
+                // Start breath timer
+                breathInterval = setInterval(function() {
+                    if (isPaused) return;
+                    
+                    currentBreathTime--;
+                    
+                    // If breath cycle complete, switch to next phase
+                    if (currentBreathTime <= 0) {
+                        isInhaling = !isInhaling;
+                        currentBreathTime = isInhaling ? inhaleTime : exhaleTime;
+                        updateBreathAnimation();
+                    }
+                    
+                    // Update breath timer display
+                    breathTimer.textContent = currentBreathTime;
+                }, 1000);
+            }
+            
+            // Pause the session
+            function pauseSession() {
+                isPaused = !isPaused;
+                
+                if (isPaused) {
+                    pauseButton.textContent = '继续';
+                    pauseOverlay.classList.add('active');
+                } else {
+                    pauseButton.textContent = '暂停';
+                    pauseOverlay.classList.remove('active');
+                }
+            }
+            
+            // End the session
+            function endSession() {
+                clearInterval(sessionInterval);
+                clearInterval(breathInterval);
+                
+                // Reset UI
+                settingsSection.style.display = 'flex';
+                timerSection.style.display = 'none';
+                pauseOverlay.classList.remove('active');
+                pauseButton.textContent = '暂停';
+                isPaused = false;
+            }
+            
+            // Event Listeners
+            startButton.addEventListener('click', startSession);
+            pauseButton.addEventListener('click', pauseSession);
+            stopButton.addEventListener('click', endSession);
+            
+            // Input validation (optional)
+            [inhaleTimeInput, exhaleTimeInput, sessionDurationInput].forEach(input => {
+                input.addEventListener('change', function() {
+                    const value = parseInt(this.value);
+                    const min = parseInt(this.min);
+                    const max = parseInt(this.max);
+                    
+                    if (value < min) this.value = min;
+                    if (value > max) this.value = max;
+                });
+            });
+        });
+    </script>
+</body>
+</html>
